@@ -6,11 +6,10 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.testing.util import total_size
 from sqlalchemy_utils import database_exists, create_database
 
-# from DF import export_data
 from LocalSettings import postgresql as settings
 
-# import DF
-import Functions as F
+import DF
+import SQLFunctions as F
 import LocalSettings
 
 def get_engine(user, passwd, host, port, db):
@@ -43,6 +42,17 @@ def get_session():
     session = sessionmaker (bind = engine)()
     return session
 
+def command_to_string(command: Result) -> str:
+    """Turns the result of a SQL command into a useful string format
+
+    This isn't for the user to access.
+    """
+    result = ""
+    f = command
+    for row in f:
+        result += str(row)
+        result += "\n"
+    return result
 
 # This is where everything runs:
 
@@ -51,21 +61,28 @@ metadata = sqlalchemy.MetaData()
 session = get_session()
 
 def execute_query(i_list: list) -> str:
+    """Executes SQL queries from the commands passed in from main.
+    """
     func_name = i_list[0]
-    if func_name in F.f_list:
-        func = F.f_list[func_name]
-        # Call the function with the remaining arguments
+    if func_name in DF.df_command_list:
+        df_func = DF.df_command_list[func_name]
         try:
-            print ('function found')
-            args = map(eval, i_list[1:])  # Convert arguments to their appropriate types
-            result = func(*args)
-            print(f"Result: {result}")
+            args = map(eval, i_list[1:])
+            result =  df_func(*args)
+            return result
         except Exception as e:
-            print(f"Error calling function: {e}")
-    else:
-        print("Function not found.")
-    return func_name
+            return(f"Error calling function: {e}")
 
+    func = F.f_list[func_name]
+    try:
+        args = map(eval, i_list[1:])  # Convert arguments to their appropriate types
+        query = func(*args)
+        result = command_to_string(session.execute(text(query)))
+        return f"Result: {result}"
+        # Instead this needs to add to the DF.
+    except Exception as e:
+        print(f"Error calling function: {e}")
+    return "\n"
 
 
 def main():
@@ -79,20 +96,11 @@ def main():
              user_quit = True
              break
 
-        i_list = user_input.split()
-        print(i_list)
-        func_name = i_list[0]
-        if func_name in F.f_list:
-            print(execute_query(i_list))
 
-        #
-        #     # Call the function with the remaining arguments
-        #     try:
-        #         args = map(eval, parts[1:])  # Convert arguments to their appropriate types
-        #         # result = func(*args)
-        #         print(f"Result: {result}")
-        #     except Exception as e:
-        #         print(f"Error calling function: {e}")
+        i_list = user_input.split()
+        func_name = i_list[0]
+        if func_name in F.f_list or func_name in DF.df_command_list:
+            print(execute_query(i_list))
         else:
             print("Function not found.")
 

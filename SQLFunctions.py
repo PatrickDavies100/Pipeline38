@@ -1,10 +1,6 @@
-import sqlalchemy
-from sqlalchemy import create_engine, Result
-from sqlalchemy.sql import text
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.testing.util import total_size
-from sqlalchemy_utils import database_exists, create_database
+import DF
 
+# Each function needs to return a string for use as a SQL command.
 
 # def command_to_string(command: Result) -> str:
 #     """Turns the result of a SQL command into a useful string format
@@ -73,40 +69,34 @@ from sqlalchemy_utils import database_exists, create_database
 #     return result
 #
 #
-def find_substring(table:str, column: str, substring: str) -> str:
-    """Returns a string with the substring and number of occurrences"""
-    result = session.execute(text(f"SELECT {column} \
-                     FROM {table} \
-            		 ;"))
-    result = command_to_string(result)
-    rlist = result.split('\n')
-    counter = 0
-    for line in rlist:
-        if substring in line:
-            counter += 1
-    return DF.add_row(table, column, "", "Substring occurrences", substring, str(counter))
+# def find_substring(table:str, column: str, substring: str) -> str:
+#     """Returns a string with the substring and number of occurrences"""
+#     result = session.execute(text(f"SELECT {column} \
+#                      FROM {table} \
+#             		 ;"))
+#     result = command_to_string(result)
+#     rlist = result.split('\n')
+#     counter = 0
+#     for line in rlist:
+#         if substring in line:
+#             counter += 1
+#     return DF.add_row(table, column, "", "Substring occurrences", substring, str(counter))
 
-def test_query() -> str:
+def test_query(table: str, column: str) -> str:
     """Just a test"""
-    return "Success"
+    result = (f"SELECT {column} \
+                FROM {table} \
+                ;")
+    DF.add_row(table, column, "", "Substring occurrences", "testarg", "testval")
+    return result
 
-
-def h() -> str:
-    """Prints a list of the available commands for the user."""
-    for i in range(len(f_list)-1):
-        print (list(f_list)[i+1])
-    return 'For more information on what each function does, \
-please use the documentation. \n \n '
 
 f_list = {
-    'h': h,
     'test_query': test_query,
     # 'display_column_names': display_column_names,
     # 'int_to_boolean': int_to_boolean,
     # 'nullify_invalid_entries': nullify_invalid_entries,
     # 'not_boolean_proportion': not_boolean_proportion,
     # 'find_substring': find_substring,
-    # 'view_stored_data': DF.view_stored_data,
-    # 'export_data': DF.export_data
 }
 
