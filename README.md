@@ -16,4 +16,9 @@ pgAdmin 4 <br />
 PyCharm <br />
 
 **Objectives:**
+ 1. Create tools for automated data process including cleaning, transformation, and processing.
+ 2. The application can generate a working serialisation format of a pipeline.
+ 3. Improve performance for large datasets with use of PostgreSQL queries.
 
+**Goal:**
+Improve my workflow for large datasets to create useful analysis for Tableau.
