@@ -69,18 +69,15 @@ import DF
 #     return result
 #
 #
-# def find_substring(table:str, column: str, substring: str) -> str:
-#     """Returns a string with the substring and number of occurrences"""
-#     result = session.execute(text(f"SELECT {column} \
-#                      FROM {table} \
-#             		 ;"))
-#     result = command_to_string(result)
-#     rlist = result.split('\n')
-#     counter = 0
-#     for line in rlist:
-#         if substring in line:
-#             counter += 1
-#     return DF.add_row(table, column, "", "Substring occurrences", substring, str(counter))
+def find_substring(table:str, column: str, substring: str) -> str:
+    """Finds the number of occurrences for a substring in a column"""
+    result = (f"SELECT COUNT(*) \
+                    FROM {table} \
+                    WHERE {column} \
+                    ILIKE '%{substring}%' \
+                    ;")
+
+    return result
 
 def test_query(table: str, column: str) -> str:
     """Just a test"""
