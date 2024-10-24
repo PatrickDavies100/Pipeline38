@@ -63,13 +63,17 @@ metadata = sqlalchemy.MetaData()
 session = get_session()
 
 def execute_query(command: str, args_list: list) -> str:
+    """Executes SQL queries and adds data to Derived DF where necessary"""
     args = map(eval, args_list)
-    query = command(*args)
-    result = command_to_string(session.execute(text(query)))
+    query_tuple = command(*args)
+    result = command_to_string(session.execute(text(query_tuple[0])))
+    if query_tuple[1] == True:
+        print(result)
+        print(D.add_row(query_tuple[0] ,result, query_tuple[2]) + '\n')
     return result
 
 def command_run(i_list: list) -> str:
-    """Executes SQL queries from the commands passed in from main.
+    """Checks for errors when executing queries.
     """
     func_name = i_list[0]
     func = F.f_list[func_name]
@@ -89,18 +93,14 @@ def main():
         user_input = input("Enter the function you want to run (followed by arguments). \n"
                            "Enter 'h' to see the function list, or 'q' to quit: ")
         if user_input == 'q':
-             user_quit = True
              break
 
         i_list = user_input.split()
         func_name = i_list[0]
-        found = False
         if func_name in F.f_list:
-            found = True
-            print(command_run(i_list))
+            command_run(i_list)
         elif func_name in D.df_command_list:
-            found = True
-            func = F.f_list[func_name]
+            func = D.df_command_list[func_name]
             try:
                 args = map(eval, i_list[1:])
                 result = func(*args)
@@ -108,7 +108,6 @@ def main():
             except Exception as e:
                 return (f"Error calling function: {e}")
         elif func_name in Q.q_list:
-            found = True
             func = Q.q_list[func_name]
             try:
                 args = map(eval, i_list[1:])

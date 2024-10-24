@@ -1,7 +1,10 @@
 import DerivedDF as D
 import QueryDF as Q
 
-# Each function needs to return a string for use as a SQL command.
+# Each function returns a tuple with three parts:
+# [0] An SQL query as a string
+# [1] A boolean of whether to add it to DerivedDF
+# [2] A description of what the value represents
 
 # def command_to_string(command: Result) -> str:
 #     """Turns the result of a SQL command into a useful string format
@@ -69,23 +72,28 @@ import QueryDF as Q
 #     result = f.get('count')/t.get('count')
 #     return result
 #
+
+
 def find_substring(table:str, column: str, substring: str) -> str:
     """Finds the number of occurrences for a substring in a column"""
-    result = (f"SELECT COUNT(*) \
+    description = "Number of rows containing substring"
+    result1 = (f"SELECT COUNT(*) \
                     FROM {table} \
                     WHERE {column} \
-                    ILIKE '%{substring}%' \
+                    LIKE '%{substring}%' \
                     ;")
+    Q.add_q(result1)
+    result = (result1, True, description)
     return result
 
 def test_SQL_query(table: str, column: str) -> str:
     """Just a test"""
-    result = (f"SELECT {column} \
+    description = "Measures something in the table"
+    result1 = (f"SELECT {column} \
                 FROM {table} \
                 ;")
-
-    D.add_row(table, column, "", "Substring occurrences", "testarg", "testval")
-    Q.add_q(result)
+    Q.add_q(result1)
+    result = (result1, True, description)
     return result
 
 
@@ -95,6 +103,6 @@ f_list = {
     # 'int_to_boolean': int_to_boolean,
     # 'nullify_invalid_entries': nullify_invalid_entries,
     # 'not_boolean_proportion': not_boolean_proportion,
-    # 'find_substring': find_substring,
+    'find_substring': find_substring,
 }
 

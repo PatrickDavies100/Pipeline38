@@ -7,14 +7,11 @@ output_data = []
 
 # Each function returns a string that tells the user what it did
 
-def add_row(Table: str, Column1 :str, Column2: str, Measure: str, Argument: str, Value: str) -> str:
-    output_data.append({'Table': Table,
-                        'Column1': Column1,
-                        'Column2': Column2,
-                        'Measure': Measure,
-                        'Argument': Argument,
-                        'Value': Value})
-    return 'One row added to dataframe'
+def add_row(command: str, value: str, description: str ) -> str:
+    output_data.append({'Command': command,
+                        'Value': value,
+                        'Description': description})
+    return 'One row added to Derived DF.'
 
 def view_stored_data() -> str:
     df = pd.DataFrame(output_data)
