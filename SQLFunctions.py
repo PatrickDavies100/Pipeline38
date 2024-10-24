@@ -69,7 +69,6 @@ import QueryDF as Q
 #     result = f.get('count')/t.get('count')
 #     return result
 #
-#
 def find_substring(table:str, column: str, substring: str) -> str:
     """Finds the number of occurrences for a substring in a column"""
     result = (f"SELECT COUNT(*) \

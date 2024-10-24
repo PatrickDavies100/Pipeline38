@@ -11,7 +11,6 @@ from LocalSettings import postgresql as settings
 import DerivedDF as D
 import SQLFunctions as F
 import QueryDF as Q
-import LocalSettings
 
 full_list = [D.df_command_list, F.f_list, Q.q_list]
 

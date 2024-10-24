@@ -8,7 +8,7 @@ def add_q(query: str) -> None:
 def view_stored_queries() -> str:
     df = pd.DataFrame(queries)
     print(df)
-    return 'End of commands \n'
+    return 'End of commands. \n'
 
 q_list = {
     'add_q': add_q,

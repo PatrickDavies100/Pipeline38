@@ -19,7 +19,7 @@ def add_row(Table: str, Column1 :str, Column2: str, Measure: str, Argument: str,
 def view_stored_data() -> str:
     df = pd.DataFrame(output_data)
     print(df)
-    return 'End of data \n'
+    return 'End of data. \n'
 
 def export_data(filename: str) -> str:
     df = pd.DataFrame(output_data)
