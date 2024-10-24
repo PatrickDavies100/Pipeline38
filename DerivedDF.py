@@ -5,6 +5,8 @@ from SQLFunctions import f_list
 # This is the list that will contain a new table that I can export.
 output_data = []
 
+# Each function returns a string that tells the user what it did
+
 def add_row(Table: str, Column1 :str, Column2: str, Measure: str, Argument: str, Value: str) -> str:
     output_data.append({'Table': Table,
                         'Column1': Column1,

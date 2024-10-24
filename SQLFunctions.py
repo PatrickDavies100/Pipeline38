@@ -1,4 +1,5 @@
-import DF
+import DerivedDF as D
+import QueryDF as Q
 
 # Each function needs to return a string for use as a SQL command.
 
@@ -76,20 +77,21 @@ def find_substring(table:str, column: str, substring: str) -> str:
                     WHERE {column} \
                     ILIKE '%{substring}%' \
                     ;")
-
     return result
 
-def test_query(table: str, column: str) -> str:
+def test_SQL_query(table: str, column: str) -> str:
     """Just a test"""
     result = (f"SELECT {column} \
                 FROM {table} \
                 ;")
-    DF.add_row(table, column, "", "Substring occurrences", "testarg", "testval")
+
+    D.add_row(table, column, "", "Substring occurrences", "testarg", "testval")
+    Q.add_q(result)
     return result
 
 
 f_list = {
-    'test_query': test_query,
+    'test_SQL_query': test_SQL_query,
     # 'display_column_names': display_column_names,
     # 'int_to_boolean': int_to_boolean,
     # 'nullify_invalid_entries': nullify_invalid_entries,
