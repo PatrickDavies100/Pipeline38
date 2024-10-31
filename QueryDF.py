@@ -1,9 +1,11 @@
 import pandas as pd
+import datetime
 
 queries = []
 
 def add_q(query: str) -> None:
-    queries.append(query)
+    row = (query, datetime.datetime.now().strftime("%d.%b %Y %H:%M:%S"))
+    queries.append(row)
 
 def view_stored_queries() -> str:
     df = pd.DataFrame(queries)

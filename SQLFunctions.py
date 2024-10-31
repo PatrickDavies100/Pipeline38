@@ -1,6 +1,7 @@
 import DerivedDF as D
 import QueryDF as Q
 
+
 # Each function returns a tuple with three parts:
 # [0] An SQL query as a string
 # [1] A boolean of whether to add it to DerivedDF
@@ -96,9 +97,20 @@ def test_SQL_query(table: str, column: str) -> str:
     result = (result1, True, description)
     return result
 
+def test_SQL_query_2(table: str, column: str, rando) -> str:
+    """Just a test"""
+    description = "Measures something in the table"
+    result1 = (f"SELECT {column} \
+                FROM {table} \
+                ;")
+    Q.add_q(result1)
+    result = (result1, True, description)
+    return result
+
 
 f_list = {
     'test_SQL_query': test_SQL_query,
+    'test_SQL_query_2': test_SQL_query_2,
     # 'display_column_names': display_column_names,
     # 'int_to_boolean': int_to_boolean,
     # 'nullify_invalid_entries': nullify_invalid_entries,

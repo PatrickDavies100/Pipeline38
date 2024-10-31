@@ -9,10 +9,12 @@ from sqlalchemy_utils import database_exists, create_database
 from LocalSettings import postgresql as settings
 
 import DerivedDF as D
+import IntegratedFunctions as I
 import SQLFunctions as F
 import QueryDF as Q
 
 full_list = [D.df_command_list, F.f_list, Q.q_list]
+derived_args = []
 
 def get_engine(user, passwd, host, port, db):
     url = f"postgresql://{user}:{passwd}@{host}:{port}/{db}"
@@ -62,15 +64,30 @@ metadata = sqlalchemy.MetaData()
 
 session = get_session()
 
-def execute_query(command: str, args_list: list) -> str:
+
+def i_run(i_f_list: list) -> str:
+    """Runs multiple queries and amends the list until the function is done"""
+    arguments = i_f_list[1: i_f_list[0]+1]
+    for i in range (i_f_list[0]+1, len(i_f_list)-1):
+        func_name = F.f_list[i_f_list[i]]
+        try:
+            print("arguments length is " + str(len(arguments)))
+            args = map(eval, arguments)
+            for j in range(len(arguments)):
+                print(arguments[j])
+            query = func_name(*args)
+            print(query)
+            new_val = execute_query(query[0])
+            arguments.append(new_val)
+        except Exception as e:
+            print(f"Error calling function: {e}")
+
+
+def execute_query(command: str) -> str:
     """Executes SQL queries and adds data to Derived DF where necessary"""
-    args = map(eval, args_list)
-    query_tuple = command(*args)
-    result = command_to_string(session.execute(text(query_tuple[0])))
-    if query_tuple[1] == True:
-        print(result)
-        print(D.add_row(query_tuple[0] ,result, query_tuple[2]) + '\n')
+    result = command_to_string(session.execute(text(command)))
     return result
+
 
 def command_run(i_list: list) -> str:
     """Checks for errors when executing queries.
@@ -101,22 +118,31 @@ def main():
             command_run(i_list)
         elif func_name in D.df_command_list:
             func = D.df_command_list[func_name]
-            try:
-                args = map(eval, i_list[1:])
-                result = func(*args)
-                return result
-            except Exception as e:
-                return (f"Error calling function: {e}")
+            args = map(eval, i_list[1:])
+            result = func(*args)
+            print(result)
         elif func_name in Q.q_list:
             func = Q.q_list[func_name]
-            try:
-                args = map(eval, i_list[1:])
-                result = func(*args)
-                return result
-            except Exception as e:
-                print(f"Error calling function: {e}")
+            args = map(eval, i_list[1:])
+            result = func(*args)
+            print(result)
+        elif func_name in I.f_list:
+            func = I.f_list[func_name]
+            args = map(eval, i_list[1:])
+            result = func(*args)
+            i_run(result)
+        elif func_name in F.f_list:
+            func = I.f_list[func_name]
+            args = map(eval, i_list[1:])
+            result = func(*args)
+
         else:
             print("Function not found.")
+
+
+
+
+
 
 
 if __name__ == '__main__':

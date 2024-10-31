@@ -7,10 +7,10 @@ output_data = []
 
 # Each function returns a string that tells the user what it did
 
-def add_row(command: str, value: str, description: str ) -> str:
-    output_data.append({'Command': command,
-                        'Value': value,
-                        'Description': description})
+def add_row(function: str, arguments: list, value: tuple ) -> str:
+    output_data.append({'function': function,
+                        'arguments': arguments,
+                        'new_val': value})
     return 'One row added to Derived DF.'
 
 def view_stored_data() -> str:
